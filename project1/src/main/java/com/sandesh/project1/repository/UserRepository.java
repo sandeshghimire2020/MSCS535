@@ -1,12 +1,13 @@
 package com.sandesh.project1.repository;
 
-import com.sandesh.project1.model.User;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+import com.sandesh.project1.model.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, String> {
-    Optional<User> findByEmailAndPassword(String email, String password);
+    Optional<User> findByEmail(String email);
 }

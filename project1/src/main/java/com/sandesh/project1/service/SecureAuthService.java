@@ -6,23 +6,25 @@ import org.springframework.http.ResponseEntity;
 import com.sandesh.project1.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Map;
 
 @Service
 public class SecureAuthService {
 
+
     private final UserRepository userRepository;
-    private final JdbcTemplate jdbcTemplate;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public SecureAuthService(UserRepository userRepository, JdbcTemplate jdbcTemplate) {
+    public SecureAuthService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-        this.jdbcTemplate = jdbcTemplate;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public ResponseEntity<AuthResponse> login(LoginRequest request) {
-        return userRepository.findByEmailAndPassword(request.getEmail(), request.getPassword())
+        return userRepository.findByEmail(request.getEmail())
+                .filter(user -> passwordEncoder.matches(request.getPassword(), user.getPassword()))
                 .map(user -> ResponseEntity.ok(new AuthResponse("Login successful", "token")))
                 .orElseGet(() -> ResponseEntity.status(401).body(new AuthResponse("Invalid credentials", null)));
     }
