@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: project1
+  datasource:
+    url: jdbc:postgresql://localhost:5432/secure_system
+    username: user
+    password: pass
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+server:
+  port: 8443
+  ssl:
+    enabled: true
+    key-store: classpath:keystore.p12
+    key-store-password: changeit
+    key-store-type: PKCS12
+    key-alias: springboot
